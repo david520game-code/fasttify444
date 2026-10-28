@@ -1,6 +1,6 @@
 import { Stack } from 'aws-cdk-lib';
 import { RestApi, LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
-import { AccountRootPrincipal, Role, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { AccountRootPrincipal, Role, PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
 import { stageName } from './environment';
 
 export interface RestApis {
@@ -15,7 +15,7 @@ export function createRestApis(stack: Stack, backend: any): RestApis {
   const apiPolicyStatement = new PolicyStatement({
     actions: ['execute-api:Invoke'],
     resources: ['*'],
-    effect: require('aws-cdk-lib').Effect.ALLOW,
+    effect: Effect.ALLOW,
   });
 
   const subscriptionApi = new RestApi(stack, 'SubscriptionApi', {
