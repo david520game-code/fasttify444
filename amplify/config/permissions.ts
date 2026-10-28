@@ -25,8 +25,8 @@ export function applyBedrockPermissions(backend: any): void {
  */
 export function applySesPermissions(backend: any): void {
   backend.postConfirmation.resources.lambda.addToRolePolicy(sesPolicyStatement);
-  backend.bulkEmailAPI.resources.lambda.addToRolePolicy(sesPolicyStatement);
-  backend.bulkEmailProcessor.resources.lambda.addToRolePolicy(sesPolicyStatement);
+  if (backend.bulkEmailAPI) backend.bulkEmailAPI.resources.lambda.addToRolePolicy(sesPolicyStatement);
+  if (backend.bulkEmailProcessor) backend.bulkEmailProcessor.resources.lambda.addToRolePolicy(sesPolicyStatement);
   backend.customMessage.resources.lambda.addToRolePolicy(sesPolicyStatement);
 }
 
@@ -35,7 +35,7 @@ export function applySesPermissions(backend: any): void {
  */
 export function applyS3Permissions(backend: any): void {
   const s3PolicyStatement = createS3PolicyStatement(backend.storage.resources.bucket.bucketArn);
-  backend.storeImages.resources.lambda.addToRolePolicy(s3PolicyStatement);
+  if (backend.storeImages) backend.storeImages.resources.lambda.addToRolePolicy(s3PolicyStatement);
 }
 
 /**
@@ -46,11 +46,11 @@ export function applySqsPermissions(backend: any, emailQueueArn: string, highPri
 
   // Permisos para enviar mensajes a las colas
   const sqsSendPolicy = createSqsSendPolicyStatement(queueArns);
-  backend.bulkEmailAPI.resources.lambda.addToRolePolicy(sqsSendPolicy);
+  if (backend.bulkEmailAPI) backend.bulkEmailAPI.resources.lambda.addToRolePolicy(sqsSendPolicy);
 
   // Permisos para recibir y procesar mensajes de las colas
   const sqsReceivePolicy = createSqsReceivePolicyStatement(queueArns);
-  backend.bulkEmailProcessor.resources.lambda.addToRolePolicy(sqsReceivePolicy);
+  if (backend.bulkEmailProcessor) backend.bulkEmailProcessor.resources.lambda.addToRolePolicy(sqsReceivePolicy);
 }
 
 /**
