@@ -9,12 +9,12 @@ import {
   generateProductDescriptionFunction,
   createProduct,
 } from './data/resource';
-import { bulkEmailAPI, bulkEmailProcessor } from './functions/bulk-email/resource';
+// import { bulkEmailAPI, bulkEmailProcessor } from './functions/bulk-email/resource';
 import { checkStoreDomain } from './functions/checkStoreDomain/resource';
 import { createSubscription } from './functions/createSubscription/resource';
 import { managePaymentKeys } from './functions/managePaymentKeys/resource';
 import { planScheduler } from './functions/planScheduler/resource';
-import { storeImages } from './functions/storeImages/resource';
+// import { storeImages } from './functions/storeImages/resource';
 import { webHookPlan } from './functions/webHookPlan/resource';
 import { validateStoreLimits } from './functions/validateStoreLimits/resource';
 import { websocketDevServer } from './functions/websocket-dev-server/resource';
@@ -52,10 +52,10 @@ const backend = defineBackend({
   generateHaikuFunction,
   checkStoreDomain,
   generateProductDescriptionFunction,
-  bulkEmailAPI,
-  bulkEmailProcessor,
+  // bulkEmailAPI,
+  // bulkEmailProcessor,
   generatePriceSuggestionFunction,
-  storeImages,
+  // storeImages,
   managePaymentKeys,
   createProduct,
   validateStoreLimits,
@@ -92,10 +92,10 @@ cfnResources.amplifyDynamoDbTables['WebSocketConnection'].timeToLiveAttribute = 
 };
 
 // Configuración de colas SQS para email masivo
-const { emailQueue, highPriorityEmailQueue } = createEmailQueues(backend.stack);
+// const { emailQueue, highPriorityEmailQueue } = createEmailQueues(backend.stack);
 
 // Configurar event sources y variables de entorno para email
-configureEmailEventSources(backend.bulkEmailProcessor, emailQueue, highPriorityEmailQueue);
+// configureEmailEventSources(backend.bulkEmailProcessor, emailQueue, highPriorityEmailQueue);
 configureEmailEnvironmentVariables(
   backend.bulkEmailAPI,
   backend.bulkEmailProcessor,
@@ -106,22 +106,17 @@ configureEmailEnvironmentVariables(
 // Aplicar permisos necesarios
 applySesPermissions(backend);
 applyS3Permissions(backend);
-applySqsPermissions(backend, emailQueue.queueArn, highPriorityEmailQueue.queueArn);
+// applySqsPermissions(backend, '', '');
 applyDynamoDbPermissions(backend);
 
 // Crear el stack para las APIs REST
 const apiStack = backend.createStack('api-stack');
 
 // Crear todas las APIs REST
-const {
-  subscriptionApi,
-  webHookApi,
-  checkStoreDomainApi,
-  storeImagesApi,
-  bulkEmailApi,
-  storeLimitsApi,
-  apiRestPolicy,
-} = createRestApis(apiStack, backend);
+const { subscriptionApi, webHookApi, checkStoreDomainApi, storeLimitsApi, apiRestPolicy } = createRestApis(
+  apiStack,
+  backend
+);
 
 // Aplicar políticas de acceso a las APIs
 applyApiAccessPolicies(backend, apiRestPolicy);
@@ -144,11 +139,7 @@ const backendOutputs = createBackendOutputs(
   subscriptionApi,
   webHookApi,
   checkStoreDomainApi,
-  storeImagesApi,
-  bulkEmailApi,
   storeLimitsApi,
-  emailQueue,
-  highPriorityEmailQueue,
   webSocketApi,
   webSocketStage
 );
