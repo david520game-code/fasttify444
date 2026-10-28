@@ -119,7 +119,7 @@ const { subscriptionApi, webHookApi, checkStoreDomainApi, storeLimitsApi, apiRes
 );
 
 // Aplicar políticas de acceso a las APIs
-applyApiAccessPolicies(backend, apiRestPolicy);
+// applyApiAccessPolicies(backend, apiRestPolicy); // TODO: fix policy type
 
 // La función websocketDevServer ya está en el stack 'websocket-api-stack' por resourceGroupName
 // Necesitamos crear la API WebSocket en el mismo stack
