@@ -96,12 +96,12 @@ cfnResources.amplifyDynamoDbTables['WebSocketConnection'].timeToLiveAttribute = 
 
 // Configurar event sources y variables de entorno para email
 // configureEmailEventSources(backend.bulkEmailProcessor, emailQueue, highPriorityEmailQueue);
-configureEmailEnvironmentVariables(
-  backend.bulkEmailAPI,
-  backend.bulkEmailProcessor,
-  emailQueue,
-  highPriorityEmailQueue
-);
+// configureEmailEnvironmentVariables(
+//   backend.bulkEmailAPI,
+//   backend.bulkEmailProcessor,
+//   emailQueue,
+//   highPriorityEmailQueue
+// );
 
 // Aplicar permisos necesarios
 applySesPermissions(backend);
