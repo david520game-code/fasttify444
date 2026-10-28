@@ -140,6 +140,10 @@ const backendOutputs = createBackendOutputs(
   webHookApi,
   checkStoreDomainApi,
   storeLimitsApi,
+  undefined,
+  undefined,
+  undefined,
+  undefined,
   webSocketApi,
   webSocketStage
 );

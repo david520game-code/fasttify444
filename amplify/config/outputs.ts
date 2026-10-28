@@ -18,12 +18,12 @@ export interface BackendOutputs {
     SubscriptionApi: ApiOutput;
     WebHookApi: ApiOutput;
     CheckStoreDomainApi: ApiOutput;
-    StoreImagesApi: ApiOutput;
-    BulkEmailApi: ApiOutput;
+    StoreImagesApi?: ApiOutput;
+    BulkEmailApi?: ApiOutput;
     StoreLimitsApi: ApiOutput;
     WebSocketDevServerApi?: WebSocketApiOutput;
   };
-  EmailQueues: {
+  EmailQueues?: {
     emailQueueUrl: string;
     highPriorityQueueUrl: string;
   };
@@ -44,18 +44,15 @@ interface WebSocketApiOutput {
   stage: string;
 }
 
-/**
- * Crea la configuración de salidas del backend
- */
 export function createBackendOutputs(
   subscriptionApi: RestApi,
   webHookApi: RestApi,
   checkStoreDomainApi: RestApi,
-  storeImagesApi: RestApi,
-  bulkEmailApi: RestApi,
   storeLimitsApi: RestApi,
-  emailQueue: Queue,
-  highPriorityEmailQueue: Queue,
+  storeImagesApi?: RestApi,
+  bulkEmailApi?: RestApi,
+  emailQueue?: Queue,
+  highPriorityEmailQueue?: Queue,
   webSocketApi?: WebSocketApi,
   webSocketStage?: WebSocketStage
 ): BackendOutputs {
@@ -83,18 +80,26 @@ export function createBackendOutputs(
         apiName: checkStoreDomainApi.restApiName,
         stage: stageName,
       },
-      StoreImagesApi: {
-        endpoint: storeImagesApi.url,
-        region: Stack.of(storeImagesApi).region,
-        apiName: storeImagesApi.restApiName,
-        stage: stageName,
-      },
-      BulkEmailApi: {
-        endpoint: bulkEmailApi.url,
-        region: Stack.of(bulkEmailApi).region,
-        apiName: bulkEmailApi.restApiName,
-        stage: stageName,
-      },
+      ...(storeImagesApi
+        ? {
+            StoreImagesApi: {
+              endpoint: storeImagesApi.url,
+              region: Stack.of(storeImagesApi).region,
+              apiName: storeImagesApi.restApiName,
+              stage: stageName,
+            },
+          }
+        : {}),
+      ...(bulkEmailApi
+        ? {
+            BulkEmailApi: {
+              endpoint: bulkEmailApi.url,
+              region: Stack.of(bulkEmailApi).region,
+              apiName: bulkEmailApi.restApiName,
+              stage: stageName,
+            },
+          }
+        : {}),
       StoreLimitsApi: {
         endpoint: storeLimitsApi.url,
         region: Stack.of(storeLimitsApi).region,
@@ -113,9 +118,13 @@ export function createBackendOutputs(
           }
         : {}),
     },
-    EmailQueues: {
-      emailQueueUrl: emailQueue.queueUrl,
-      highPriorityQueueUrl: highPriorityEmailQueue.queueUrl,
-    },
+    ...(emailQueue && highPriorityEmailQueue
+      ? {
+          EmailQueues: {
+            emailQueueUrl: emailQueue.queueUrl,
+            highPriorityQueueUrl: highPriorityEmailQueue.queueUrl,
+          },
+        }
+      : {}),
   };
 }
